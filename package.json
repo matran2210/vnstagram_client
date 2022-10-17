@@ -19,6 +19,7 @@
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "scss": "^0.2.4",
+    "tw-elements": "^1.0.0-alpha12",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
