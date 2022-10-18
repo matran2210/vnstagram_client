@@ -44,6 +44,7 @@ class ParentComponent extends React.Component {
 
 const mapStateToProps = state => {
     return {
+        //state.auth.isLoggedIn lấy trong localstorage để kiểm tra xem người dùng đã đăng nhập chưa
       isLoggedIn : state.auth.isLoggedIn
     }
 }

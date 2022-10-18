@@ -22,7 +22,7 @@ class HomeComponent extends React.Component {
                                 Hôm nay trời đẹp quá
                             </div>
 
-                            <div className="content_post  border-2 border-blue-300 bg-white rounded-md text-gray-700 px-2 text-lg italic">
+                            <div className="content_post   bg-white rounded-md text-gray-700 px-2 text-lg italic">
                                 Single Sign-On, đúng như tên gọi, là cơ chế cho phép người dùng có thể truy cập nhiều trang web, ứng dụng mà chỉ cần đăng nhập một lần. Một khi đã được định danh ở một trang website A, thì cũng sẽ được định danh tương tự ở website B mà không cần lặp lại thao tác đăng nhập
                             </div>
 

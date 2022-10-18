@@ -1,7 +1,24 @@
-import React, { useState } from "react";
 import 'tw-elements';
+import React, { useState } from "react";
+import {createPost} from "../../services/PostService";
+
+
+const addPost = async (titlePost,contentPost,filePost) => {
+   let data = {
+    'title' :  titlePost,
+    'content' : contentPost,
+    'filePost' : filePost
+   };
+    let res = await createPost(data);
+}
+
+
+
 const ModalAddComponent = () => {
     const [showModal, setShowModal] = useState(false);
+    const [titlePost, setTitlePost] = useState('');
+    const [contentPost, setContentPost] = useState('');
+    const [filePost, setFilePost] = useState(null);
     return (
         <>
             <div>
@@ -28,15 +45,20 @@ const ModalAddComponent = () => {
                                         <label className="block text-black text-sm font-bold mb-1">
                                             Tiêu đề
                                         </label>
-                                        <input className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
+                                        
+                                           
+                                        <input value ={titlePost} onChange = {(event) => setTitlePost(event.target.value)} 
+                                            className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
                                         <label className="block text-black text-sm font-bold mb-1">
                                             Nội dung
                                         </label>
-                                        <textarea className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
+                                        <textarea value ={contentPost} onChange = {(event) => setContentPost(event.target.value)} 
+                                            className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
                                         <label className="block text-black text-sm font-bold mb-1">
                                             Chọn ảnh
                                         </label>
-                                        <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" />
+                                        <input onChange = {(event) => setFilePost(event.target.files)}
+                                         class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" />
                                     </form>
                                 </div>
                                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
@@ -45,14 +67,14 @@ const ModalAddComponent = () => {
                                         type="button"
                                         onClick={() => setShowModal(false)}
                                     >
-                                        Close
+                                        Đóng
                                     </button>
                                     <button
                                         className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                                         type="button"
-                                        onClick={() => setShowModal(false)}
+                                        onClick={function(event){ addPost(titlePost,contentPost,filePost); setShowModal(false)}}
                                     >
-                                        Submit
+                                        Thêm
                                     </button>
                                 </div>
                             </div>
@@ -68,3 +90,4 @@ export default ModalAddComponent;
 
 //note*
 //cài: npm i tw-elements , lên trang npm để đọc hướng dẫn setup
+//function(event){ addPost(); setShowModal(false)} để gọi 2 hàm trong 1 event
