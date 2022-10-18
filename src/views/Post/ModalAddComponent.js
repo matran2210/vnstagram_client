@@ -4,14 +4,17 @@ const ModalAddComponent = () => {
     const [showModal, setShowModal] = useState(false);
     return (
         <>
-            <button
-                className="bg-blue-200 text-black active:bg-blue-500 
-      font-bold px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                type="button"
-                onClick={() => setShowModal(true)}
-            >
-                Viết bài
-            </button>
+            <div>
+                <button
+                    className="bg-gray-300 text-black active:bg-blue-500 
+      font-bold px-5 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ml-2"
+                    type="button"
+                    onClick={() => setShowModal(true)}
+                >
+                    Viết bài
+                </button>
+            </div>
+
             {showModal ? (
                 <>
                     <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
