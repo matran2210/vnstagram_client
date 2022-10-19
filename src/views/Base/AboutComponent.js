@@ -1,9 +1,9 @@
-import React from  'react';
+import React from 'react';
 
-class AboutComponent extends React.Component{
+class AboutComponent extends React.Component {
 
-    state ={ //state phải đặt ngoài render()
-        'age' : '18'
+    state = { //state phải đặt ngoài render()
+        'age': '18'
     }
     handleOnchangeName = (event) => {
         this.setState({
@@ -11,20 +11,20 @@ class AboutComponent extends React.Component{
         })
     }
 
-    render(){
+    render() {
         let name = 'Doan Quang Cuong';
 
-        return(
+        return (
             <>
-            <div class='text-center'>
-            <div>Hello World! {name}</div>
-            <div>
-            <input value = {this.state.age} type="text"
-                onChange = {(event) => this.handleOnchangeName(event)}
-            />
-            </div>
-            My age: {this.state.age}
-            </div>
+                <div className='text-center'>
+                    <div>Hello World! {name}</div>
+                    <div>
+                        <input value={this.state.age} type="text"
+                            onChange={(event) => this.handleOnchangeName(event)}
+                        />
+                    </div>
+                    My age: {this.state.age}
+                </div>
             </>
         )
     }
