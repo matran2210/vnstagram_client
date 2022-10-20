@@ -7,15 +7,22 @@ class HomeComponent extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            'listPost':[]
+            'listPost':null
         }
     }
     loadListPost = async () => {
         let listPost = await loadListPostService();
+        this.setState = [{
+            listPost : listPost
+        }]
         console.log(listPost);
     }
     componentDidMount = () =>{
-        alert(123);
+        if(!this.state.listPost){
+            this.loadListPost();
+            //alert(123);
+        }
+        
     }
     render() {
         return (

@@ -8,7 +8,7 @@ const loadListPostService = () => {
     let config = {
         headers: { Authorization: `Bearer ${auth.accessToken}` }
     };
-    let res = axios.get(Config['api_url'] + 'posts',null, config)
+    let res = axios.get(Config['api_url'] + 'posts',config)
     return res;
 }
 
