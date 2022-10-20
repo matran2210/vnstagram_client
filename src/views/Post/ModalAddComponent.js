@@ -3,69 +3,126 @@ import React, { useState } from "react";
 import { createPost } from "../../services/PostService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingComponent from '../../components/LoadingComponent';
 
-const initialState = {
-    titlePost: "",
-    contentPost: "",
-    showModal: false,
-    filePost: ""
-};
+const ModalAddComponent = () => {
+    const initialState = {
+        titlePost: "",
+        contentPost: "",
+        showModal: false,
+        attachFile: {},
+        showLoading: false,
+        inValids: []
+    };
 
+    const [
+        { showModal, titlePost, contentPost, attachFile, showLoading, inValids },
+        setState
+    ] = useState(initialState);
 
-const addPost = async (titlePost, contentPost, filePost) => {
-    //note* file post là 1 Object Promise nên dùng .then để lấy ra dữ liệu
-    filePost.then(async meta => {
+    const handleValid = () => {
+        let errors = [];
+        let isValid = true;
+        if (!titlePost) {
+            isValid = false;
+            errors['titlePost'] = "Tiêu đề bài viết không được để trống";
+        }
+        if (!contentPost) {
+            isValid = false;
+            errors['contentPost'] = "Nội dung bài viết không được để trống";
+        }
+        if (!isValid) {
+            setState((prevState) => ({
+                ...prevState,
+                inValids: errors,
+            }));
+        }
+        return isValid;
+    }
+
+    const addPost = async () => {
+        if (handleValid() === false) {
+            return;
+        }
         let data = {
             'title': titlePost,
             'content': contentPost,
-            'fileName': meta['fileName'],
-            'fileContent': meta['fileContent']
+            'attachFile': attachFile
         };
-        console.log(data);
-        // let res = await createPost(data);
-        // if (res.data.code = 'VNS001') {
-        //     toast.success(res.data.message);
-        // } else {
-        //     toast.error(res.data.message);
-        // }
-        // console.log();
-    });
-
-    // let res = await createPost(data);
-}
-const handleFileRead = async (event) => {
-    const file = event.target.files[0]
-    const base64 = await convertBase64(file)
-    const fileName = file.name
-    return { 'fileContent': base64, 'fileName': fileName };
-}
-
-const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file)
-        fileReader.onload = () => {
-            resolve(fileReader.result);
+        handleShowLoading(true);
+        let res = await createPost(data);
+        if (res.data.code === 'VNS001') {
+            toast.success(res.data.message);
+            handleShowLoading(false);
+            clickShowModal(false);
+            setState(initialState);
+        } else {
+            handleShowLoading(false);
+            toast.error(res.data.message);
         }
-        fileReader.onerror = (error) => {
-            reject(error);
-        }
-    })
-}
+    }
 
-const ModalAddComponent = () => {
-    const [
-        { showModal, titlePost, contentPost, filePost },
-        setState
-    ] = useState(initialState);
+    const clickShowModal = (flag) => {
+        setState((prevState) => ({
+            ...prevState,
+            showModal: flag,
+        }));
+    }
+    const handleShowLoading = (flag) => {
+        setState((prevState) => ({
+            ...prevState,
+            showLoading: flag,
+        }));
+    }
+    const handleSetTitlePost = (value) => {
+        setState((prevState) => ({
+            ...prevState,
+            titlePost: value,
+        }));
+    }
+    const handleSetContentPost = (value) => {
+        setState((prevState) => ({
+            ...prevState,
+            contentPost: value,
+        }));
+    }
+
+    const handleFileRead = async (event) => {
+        const file = event.target.files[0]
+        const base64 = await convertBase64(file)
+        const fileName = file.name
+        let attachFile = { fileContent: base64, fileName: fileName };
+        setState((prevState) => ({
+            ...prevState,
+            attachFile: attachFile,
+        }));
+    }
+
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            }
+            fileReader.onerror = (error) => {
+                reject(error);
+            }
+        })
+    }
+
     return (
         <>
+
+            <ToastContainer />
+
             <div>
+                {showLoading ? (<LoadingComponent />) : null}
                 <button
                     className="bg-gray-300 text-black active:bg-blue-500 
       font-bold px-5 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ml-2"
                     type="button"
-                    onClick={() => setState({ showModal: true })}
+                    onClick={() => clickShowModal(true)}
                 >
                     Viết bài
                 </button>
@@ -84,19 +141,22 @@ const ModalAddComponent = () => {
                                         <label className="block text-black text-sm font-bold mb-1">
                                             Tiêu đề
                                         </label>
-
-
-                                        <input value={titlePost} onChange={(event) => setState(prevState => ({ ...prevState, [filePost]: event.target.value }))}
+                                        <input value={titlePost} onChange={(event) => handleSetTitlePost(event.target.value)}
                                             className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
+                                        <span className="text-red-600">{inValids["titlePost"]}</span>
+
                                         <label className="block text-black text-sm font-bold mb-1">
                                             Nội dung
                                         </label>
-                                        <textarea value={contentPost} onChange={(event) => setState(prevState => ({ ...prevState, [filePost]: event.target.value }))}
+                                        <textarea value={contentPost} onChange={(event) => handleSetContentPost(event.target.value)}
                                             className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
+                                        <span className="text-red-600">{inValids["contentPost"]}</span>
+
                                         <label className="block text-black text-sm font-bold mb-1">
                                             Chọn ảnh
                                         </label>
-                                        <input onChange={(event) => setState(prevState => ({ ...prevState, [filePost]: handleFileRead(event) }))}
+                                        <input onChange={(event) => handleFileRead(event)}
+                                            accept="image/*"
                                             className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" />
                                     </form>
                                 </div>
@@ -104,14 +164,14 @@ const ModalAddComponent = () => {
                                     <button
                                         className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"
                                         type="button"
-                                        onClick={() => setState(prevState => ({ ...prevState, [showModal]: false }))}
+                                        onClick={() => { clickShowModal(false); handleShowLoading(false); setState(initialState) }}
                                     >
                                         Đóng
                                     </button>
                                     <button
                                         className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                                         type="button"
-                                        onClick={function (event) { addPost(titlePost, contentPost, filePost); setState(prevState => ({ ...prevState, [showModal]: false })) }}
+                                        onClick={(event) => { addPost() }}
                                     >
                                         Thêm
                                     </button>
