@@ -1,6 +1,6 @@
 import 'tw-elements';
 import React, { useState } from "react";
-import { createPost } from "../../services/PostService";
+import { createPostService } from "../../services/PostService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingComponent from '../../components/LoadingComponent';
@@ -50,7 +50,7 @@ const ModalAddComponent = () => {
             'attachFile': attachFile
         };
         handleShowLoading(true);
-        let res = await createPost(data);
+        let res = await createPostService(data);
         if (res.data.code === 'VNS001') {
             toast.success(res.data.message);
             handleShowLoading(false);

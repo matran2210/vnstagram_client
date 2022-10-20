@@ -1,5 +1,5 @@
 import React from "react";
-import { handleLogin } from "../../services/AuthService";
+import { handleLoginService } from "../../services/AuthService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { connect } from "react-redux";
@@ -28,7 +28,7 @@ class LoginComponent extends React.Component {
     }
     handleClickLogin = async () => {
         try {
-            let res = await handleLogin(this.state.username, this.state.password);
+            let res = await handleLoginService(this.state.username, this.state.password);
             if (res['data']['code'] !== 'VNS001') { //VNS001 là trạng thái success
                 toast.error(res['data']['message']);
             } else {
