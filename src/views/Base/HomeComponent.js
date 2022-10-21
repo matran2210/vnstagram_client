@@ -1,28 +1,11 @@
 import React from "react";
 import ModalAddComponent from "../Post/ModalAddComponent";
 import Config from "../../configs/config.json";
-import { loadListPostService } from "../../services/PostService";
 
 class HomeComponent extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state = {
-            'listPost':null
-        }
-    }
-    loadListPost = async () => {
-        let listPost = await loadListPostService();
-        this.setState = [{
-            listPost : listPost
-        }]
-        console.log(listPost);
-    }
-    componentDidMount = () =>{
-        if(!this.state.listPost){
-            this.loadListPost();
-            //alert(123);
-        }
-        
+        console.log(props);
     }
     render() {
         return (
