@@ -26,11 +26,7 @@ function App() {
 
   useEffect(() => {
     loadListPost();
-
   }, []);
-
-
-
   return (
 
     <BrowserRouter>
@@ -40,7 +36,6 @@ function App() {
           <Route path='/about' element={<AboutComponent />} />
           <Route index element={<HomeComponent listPost={listPost} />} />
         </Route>
-
       </Routes>
     </BrowserRouter>
   );

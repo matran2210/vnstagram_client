@@ -1,5 +1,6 @@
 import React from "react";
 import ModalAddComponent from "../Post/ModalAddComponent";
+import MenuActionComponent from "../../components/MenuActionComponent";
 import Config from "../../configs/config.json";
 
 class HomeComponent extends React.Component {
@@ -18,9 +19,17 @@ class HomeComponent extends React.Component {
                         <ModalAddComponent />
                         <div className="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 w-11/12 mt-6 ml-2">
 
-                            <div className="user_post flex mb-2">
-                                <img src={Config['default_img']} className="flex-initial bg-white rounded-full w-10 h-10" alt="avatar" />
-                                <span className="hover:text-gray-500 text-gray-600 flex-initial mt-2 ml-2 font-bold"><a href="/">Nguyễn Khánh Ly</a></span>
+                            <div className="flex justify-between">
+                                <div className="user_post flex mb-2">
+                                    <img src={Config['default_img']} className="flex-initial bg-white rounded-full w-10 h-10" alt="avatar" />
+                                    <span className="hover:text-gray-500 text-gray-600 flex-initial mt-2 ml-2 font-bold"><a href="/">Nguyễn Khánh Ly</a></span>
+                                </div>
+
+                                <div className="menuAction mt-1  hover:text-gray-600">
+                                    <MenuActionComponent/>            
+
+
+                                </div>
                             </div>
 
                             <div className="title_post mb-2 border-x-2 border-blue-400 bg-white rounded-md text-gray-700 px-2 text-lg italic">
@@ -31,10 +40,17 @@ class HomeComponent extends React.Component {
                                 Single Sign-On, đúng như tên gọi, là cơ chế cho phép người dùng có thể truy cập nhiều trang web, ứng dụng mà chỉ cần đăng nhập một lần. Một khi đã được định danh ở một trang website A, thì cũng sẽ được định danh tương tự ở website B mà không cần lặp lại thao tác đăng nhập
                             </div>
 
-                            <button className="bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded inline-flex items-center">
-                                <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z" /></svg>
-                                <span>Download</span>
-                            </button>
+                            <div className="actionGroup mt-1">
+                                <button className="inline-flex items-center hover:text-gray-700 bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded">
+                                    <i className="fa fa-thumbs-up mr-1" aria-hidden="true"></i>
+                                    <span>Thích</span>
+                                </button>
+
+                                <button className="inline-flex items-center hover:text-gray-700 bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded">
+                                    <i className="fa fa-comment mr-1" aria-hidden="true"></i>
+                                    <span>Bình luận</span>
+                                </button>
+                            </div>
 
 
 
@@ -61,6 +77,14 @@ class HomeComponent extends React.Component {
 
                     </div>
                 </div>
+
+
+
+
+
+
+
+
             </>
 
         )
@@ -76,3 +100,4 @@ export default HomeComponent;
 // grid-cols-2 chia màn hình làm 2 cột,  gap-1 khoảng cách giữa 2 cột là 1
 // hover:grid-cols-6 là khi di chuột vào là nó tự nhiên lại chia thành 6 cột
 // md:grid-cols-6 dùng 6 cột khi ở kích thước màn md
+//group-hover để hiện menu dropdown, phải cấu hình trong taiwind.config.js
