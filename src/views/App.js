@@ -28,13 +28,15 @@ function App() {
     loadListPost();
   }, []);
   return (
-
     <BrowserRouter>
       <Routes>
         <Route path='/login' element={<LoginComponent />} />
         <Route path='/' element={<ParentComponent />}>
           <Route path='/about' element={<AboutComponent />} />
-          <Route index element={<HomeComponent listPost={listPost} />} />
+          {/* note* phải thêm điều kiện này nếu không khi HomeComponent được render thì listPost lại chưa có */}
+          {listPost &&
+            <Route index element={<HomeComponent listPost={listPost} />} />
+          }
         </Route>
       </Routes>
     </BrowserRouter>

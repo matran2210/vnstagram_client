@@ -8,7 +8,12 @@ const loadListPostService = () => {
     let config = {
         headers: { Authorization: `Bearer ${auth.accessToken}` }
     };
-    let res = axios.get(Config['api_url'] + 'posts',config)
+    let res = axios.get(Config['api_url'] + 'posts', config)
+    return res;
+}
+
+const downloadFilePost = (fileId) => {
+    let res = axios.get(Config['api_url'] + 'supports/download?id=' + fileId)
     return res;
 }
 
@@ -25,4 +30,4 @@ const createPostService = (data) => {
 }
 
 
-export { createPostService,loadListPostService };
+export { createPostService, loadListPostService, downloadFilePost };
