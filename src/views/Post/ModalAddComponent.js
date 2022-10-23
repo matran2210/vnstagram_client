@@ -1,22 +1,25 @@
 import 'tw-elements';
 import React, { useState } from "react";
 import { createPostService } from "../../services/PostService";
+import { editPostService } from "../../services/PostService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingComponent from '../../components/LoadingComponent';
 
-const ModalAddComponent = () => {
+const ModalAddComponent = (props) => {
+
+    const {setShowModal} = props  //props từ thằng cha truyền xuống
+
     const initialState = {
-        titlePost: "",
-        contentPost: "",
-        showModal: false,
-        attachFile: {},
+        titlePost: props.titlePost,
+        contentPost: props.contentPost,
+        attachFile: props.attachFile,
         showLoading: false,
         inValids: []
     };
 
     const [
-        { showModal, titlePost, contentPost, attachFile, showLoading, inValids },
+        {titlePost, contentPost, attachFile, showLoading, inValids },
         setState
     ] = useState(initialState);
 
@@ -40,7 +43,7 @@ const ModalAddComponent = () => {
         return isValid;
     }
 
-    const addPost = async () => {
+    const addOrUpdatePost = async (postId) => {
         if (handleValid() === false) {
             return;
         }
@@ -50,7 +53,13 @@ const ModalAddComponent = () => {
             'attachFile': attachFile
         };
         handleShowLoading(true);
-        let res = await createPostService(data);
+        let res = null;
+        if(!postId){
+            res = await createPostService(data);
+        }else{
+            res = await editPostService(postId,data);
+        }
+        toast.error('aba');
         if (res.data.code === 'VNS001') {
             toast.success(res.data.message);
             handleShowLoading(false);
@@ -61,12 +70,8 @@ const ModalAddComponent = () => {
             toast.error(res.data.message);
         }
     }
-
     const clickShowModal = (flag) => {
-        setState((prevState) => ({
-            ...prevState,
-            showModal: flag,
-        }));
+        setShowModal(flag);
     }
     const handleShowLoading = (flag) => {
         setState((prevState) => ({
@@ -114,21 +119,13 @@ const ModalAddComponent = () => {
     return (
         <>
 
-            <ToastContainer />
+           
 
             <div>
                 {showLoading ? (<LoadingComponent />) : null}
-                <button
-                    className="bg-gray-300 text-black active:bg-blue-500 
-      font-bold px-5 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ml-2"
-                    type="button"
-                    onClick={() => clickShowModal(true)}
-                >
-                    Viết bài
-                </button>
             </div>
-
-            {showModal ? (
+            <ToastContainer />
+            {true ? (
                 <>
                     <div className="flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
                         <div className="relative w-auto my-6 mx-auto max-w-3xl">
@@ -151,13 +148,19 @@ const ModalAddComponent = () => {
                                         <textarea value={contentPost} onChange={(event) => handleSetContentPost(event.target.value)}
                                             className="shadow appearance-none border rounded w-full py-2 px-1 text-black" />
                                         <span className="text-red-600">{inValids["contentPost"]}</span>
-
-                                        <label className="block text-black text-sm font-bold mb-1">
-                                            Chọn ảnh
-                                        </label>
-                                        <input onChange={(event) => handleFileRead(event)}
-                                            accept="image/*"
-                                            className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file" />
+                                        <div className="file_input">
+                                            <label for="file_post_input" className="cursor-pointer flex justify-center border-dashed border-2 border-white mt-2 max-w-80 max-h-80">
+                                                {
+                                                (attachFile) ?
+                                                    <img className="w-full" src={attachFile.fileContent} alt = "file_post"/>
+                                                    :
+                                                    <span className="font-bold my-20">Chọn ảnh cho bài viết</span>
+                                                }
+                                                
+                                            </label>
+                                            <input id="file_post_input" onChange={(event) => handleFileRead(event)}
+                                                accept="image/*" className="w-full bg-white hidden" type="file" />
+                                        </div>
                                     </form>
                                 </div>
                                 <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
@@ -168,13 +171,32 @@ const ModalAddComponent = () => {
                                     >
                                         Đóng
                                     </button>
-                                    <button
-                                        className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
-                                        type="button"
-                                        onClick={(event) => { addPost() }}
-                                    >
-                                        Thêm
-                                    </button>
+                                    { 
+                                        (() => {
+                                            if(!props.postId) {
+                                                    return (
+                                                        <button
+                                                        className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                                                        type="button"
+                                                        onClick={(event) => { addOrUpdatePost() }}
+                                                    >Thêm</button>
+                                                    )
+                                                } else if (props.postId) {
+                                                    return (
+                                                        <button
+                                                        className="text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
+                                                        type="button"
+                                                        onClick={(event) => { addOrUpdatePost(props.postId) }}
+                                                    >Sửa</button>
+                                                    )
+                                                } else {
+                                                    return (
+                                                        null
+                                                    )
+                                                }
+                                        })()  
+                                    
+                                    }
                                 </div>
                             </div>
                         </div>

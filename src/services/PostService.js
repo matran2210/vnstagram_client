@@ -12,6 +12,17 @@ const loadListPostService = () => {
     return res;
 }
 
+const getPostByIdService = (postId) => {
+
+    let storage = JSON.parse(localStorage.getItem('persist:auth'));
+    let auth = JSON.parse(storage.auth);
+    let config = {
+        headers: { Authorization: `Bearer ${auth.accessToken}` }
+    };
+    let res = axios.get(Config['api_url'] + 'posts/'+ postId, config)
+    return res;
+}
+
 const downloadFilePost = (fileId) => {
     let res = axios.get(Config['api_url'] + 'supports/download?id=' + fileId)
     return res;
@@ -29,5 +40,16 @@ const createPostService = (data) => {
     return res;
 }
 
+const editPostService = (postId,data) => {
 
-export { createPostService, loadListPostService, downloadFilePost };
+    let storage = JSON.parse(localStorage.getItem('persist:auth'));
+    let auth = JSON.parse(storage.auth);
+    let config = {
+        headers: { Authorization: `Bearer ${auth.accessToken}` }
+    };
+    let res = axios.put(Config['api_url'] + 'posts/'+postId, data, config)
+    return res;
+}
+
+
+export { createPostService,editPostService, loadListPostService, downloadFilePost, getPostByIdService };

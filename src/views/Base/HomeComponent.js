@@ -2,20 +2,38 @@ import React from "react";
 import ModalAddComponent from "../Post/ModalAddComponent";
 import MenuActionComponent from "../../components/MenuActionComponent";
 import Config from "../../configs/config.json";
+import ListFriendComponent from "./ListFriendComponent";
 
 class HomeComponent extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            'showModal' : false
+        }
+    }
+    setShowModal = (flag) => {
+        this.setState({
+            showModal: flag
+        })
     }
     render() {
         return (
             <>
+                {this.state.showModal &&
+                    <ModalAddComponent setShowModal={this.setShowModal} />
+                }
                 <div className="grid grid-cols-8 gap-3">
                     <div className="col-span-2 border-r-2 border-gray-300 h-64 ml-2">
                         Tiện ích
                     </div>
                     <div className="col-span-4 border-r-2 border-gray-300 h-64 ml-2">
-                        <ModalAddComponent />
+                        <button
+                            className="bg-gray-300 text-black active:bg-blue-500 font-bold px-5 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ml-2"
+                            type="button"
+                            onClick={() => this.setShowModal(true)}
+                        >
+                            Viết bài
+                        </button>
                         {this.props.listPost &&
                             this.props.listPost.map((post) => (
                                 <div key={post.id} className="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 w-11/12 mt-6 ml-2">
@@ -26,7 +44,7 @@ class HomeComponent extends React.Component {
                                         </div>
 
                                         <div className="menuAction mt-1  hover:text-gray-600">
-                                            <MenuActionComponent />
+                                            <MenuActionComponent postId = {post.id} />
                                         </div>
                                     </div>
 
@@ -38,13 +56,15 @@ class HomeComponent extends React.Component {
                                         {post.content}
                                     </div>
 
-                                    <div className="image_post px-2">
+                                    <div className="image_post px-2 mt-2">
+
+
                                         {post.file_content &&
                                             <img className="max-width: 100% max-height: 100%" src={"data:image/png;base64, " + post.file_content} alt="image_post" />
                                         }
                                     </div>
 
-                                    <div className="actionGroup mt-1">
+                                    <div className="actionGroup mt-1 border-t-2 border-gray-300">
                                         <button className="inline-flex items-center hover:text-gray-700 bg-grey-light hover:bg-grey text-grey-darkest font-bold py-2 px-4 rounded">
                                             <i className="fa fa-thumbs-up mr-1" aria-hidden="true"></i>
                                             <span>Thích</span>
@@ -64,25 +84,7 @@ class HomeComponent extends React.Component {
 
                         }
                     </div>
-                    <div className="col-span-2 text-center">
-                        <h1 className="font-bold text-blue-500">Danh sách bạn bè</h1>
-                        <br></br>
-                        <div className="divide-y divide-slate-200">
-                            <div className="hover:text-gray-400">
-                                <a href="/">Đoàn Quang Cường</a>
-                                <span className="text-green-400"> (Online)</span>
-                            </div>
-                            <div className="hover:text-gray-400">
-                                <a href="/">Nguyễn Văn Hoàng</a>
-                                <span className="text-red-400"> (Offline)</span>
-                            </div>
-                            <div className="hover:text-gray-400">
-                                <a href="/">Nguyễn Khánh Ly</a>
-                                <span className="text-green-400"> (Online)</span>
-                            </div>
-                        </div>
-
-                    </div>
+                        <ListFriendComponent/>
                 </div>
             </>
         )
