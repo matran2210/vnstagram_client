@@ -59,7 +59,6 @@ const ModalAddComponent = (props) => {
         }else{
             res = await editPostService(postId,data);
         }
-        toast.error('aba');
         if (res.data.code === 'VNS001') {
             toast.success(res.data.message);
             handleShowLoading(false);

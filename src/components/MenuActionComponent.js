@@ -1,7 +1,9 @@
 import React, {useState} from "react";
-import { getPostByIdService } from "../services/PostService";
+import { getPostByIdService,getDeletePostService } from "../services/PostService";
 import ModalAddComponent from "../views/Post/ModalAddComponent";
 import LoadingComponent from "./LoadingComponent";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MenuActionComponent = (props) => {
 
@@ -11,7 +13,7 @@ const MenuActionComponent = (props) => {
     const [contentPost,setContentPost] = useState('');
     const [attachFile,setAttachFile] = useState({});
     const [showLoading,setShowLoading] = useState(false);
-
+ 
 
     const handleEditPost = async (e) => {
         e.preventDefault();
@@ -27,10 +29,22 @@ const MenuActionComponent = (props) => {
         }
 
     }
+    const handleDeletePost = async (e) => {
+        e.preventDefault();
+        setShowLoading(true);
+        let res = await getDeletePostService(props.postId);
+        if (res.data.code === 'VNS001') {
+            setShowLoading(false);
+            toast.success(res['data']['message']);
+        }else{
+            toast.error(res['data']['message']);
+        }
+
+    }
 
     return (
         <>
- 
+        <ToastContainer />
         {showLoading ? (<LoadingComponent />) : null}
 
         {showModal &&
@@ -49,7 +63,8 @@ const MenuActionComponent = (props) => {
                 <a onClick={(event) => handleEditPost(event)}
                  className="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap"
                     href="/">Sửa bài viết</a>
-                <a className="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap"
+                <a onClick={(event) => handleDeletePost(event)}
+                 className="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap"
                     href="/">Xóa bài viết</a>
             </li>
         </ul>

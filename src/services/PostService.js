@@ -51,5 +51,16 @@ const editPostService = (postId,data) => {
     return res;
 }
 
+const getDeletePostService = (postId) => {
 
-export { createPostService,editPostService, loadListPostService, downloadFilePost, getPostByIdService };
+    let storage = JSON.parse(localStorage.getItem('persist:auth'));
+    let auth = JSON.parse(storage.auth);
+    let config = {
+        headers: { Authorization: `Bearer ${auth.accessToken}` }
+    };
+    let res = axios.delete(Config['api_url'] + 'posts/'+postId, config)
+    return res;
+}
+
+
+export { createPostService,editPostService,getDeletePostService, loadListPostService, downloadFilePost, getPostByIdService };
