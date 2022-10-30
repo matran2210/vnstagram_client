@@ -16,11 +16,17 @@ class HomeComponent extends React.Component {
             showModal: flag
         })
     }
+    reloadListPost = (postId,action,newPost) => {
+        this.props.reloadListPost(postId,action,newPost)
+    }
     render() {
         return (
             <>
                 {this.state.showModal &&
-                    <ModalAddComponent setShowModal={this.setShowModal} />
+                    <ModalAddComponent
+                     setShowModal={this.setShowModal} 
+                     reloadListPost = {this.reloadListPost}
+                     />
                 }
                 <div className="grid grid-cols-8 gap-3">
                     <div className="col-span-2 border-r-2 border-gray-300 h-64 ml-2">
@@ -44,7 +50,10 @@ class HomeComponent extends React.Component {
                                         </div>
 
                                         <div className="menuAction mt-1  hover:text-gray-600">
-                                            <MenuActionComponent postId = {post.id} />
+                                            <MenuActionComponent
+                                             postId = {post.id}
+                                             reloadListPost = {this.reloadListPost}
+                                             />
                                         </div>
                                     </div>
 

@@ -53,22 +53,30 @@ const ModalAddComponent = (props) => {
             'attachFile': attachFile
         };
         handleShowLoading(true);
-        let res = null;
+        let res = null,action = null;
         if(!postId){
             res = await createPostService(data);
+            action = 'ADD';
         }else{
             res = await editPostService(postId,data);
+            action = 'EDIT';
         }
         if (res.data.code === 'VNS001') {
             toast.success(res.data.message);
             handleShowLoading(false);
             clickShowModal(false);
             setState(initialState);
+            reloadListPost(postId,action,res.data.data);
         } else {
             handleShowLoading(false);
             toast.error(res.data.message);
         }
     }
+
+    const reloadListPost = (postId, action,newPost) => {
+        props.reloadListPost(postId,action,newPost);
+    }
+
     const clickShowModal = (flag) => {
         setShowModal(flag);
     }

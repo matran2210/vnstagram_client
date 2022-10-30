@@ -35,11 +35,16 @@ const MenuActionComponent = (props) => {
         let res = await getDeletePostService(props.postId);
         if (res.data.code === 'VNS001') {
             setShowLoading(false);
+            reloadListPost(props.postId,'DELETE');
             toast.success(res['data']['message']);
         }else{
             toast.error(res['data']['message']);
         }
 
+    }
+
+    const reloadListPost = (postId,action,newPost) => {
+        props.reloadListPost(postId,action,newPost);
     }
 
     return (
@@ -54,6 +59,7 @@ const MenuActionComponent = (props) => {
             setShowModal = {setShowModal}
             attachFile = {attachFile}
             postId = {postId}
+            reloadListPost = {reloadListPost}
             />
         }
         <div className="group inline-block cursor-pointer border-2 w-5 h-11">
